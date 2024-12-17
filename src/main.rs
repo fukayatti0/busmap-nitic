@@ -1,14 +1,23 @@
 ﻿use regex::Regex;
-use reqwest;
+use reqwest::{self, Proxy};
 use scraper::{Html, Selector};
 use std::env;
 
-async fn get_bus_info(stop_cd_from: &str, stop_cd_to: &str) {
+async fn get_bus_info(stop_cd_from: &str, stop_cd_to: &str, proxy_url: Option<&str>) {
+    let client = if let Some(proxy) = proxy_url {
+        reqwest::Client::builder()
+            .proxy(Proxy::all(proxy).unwrap())
+            .build()
+            .unwrap()
+    } else {
+        reqwest::Client::new()
+    };
+
     let url = format!(
         "https://mc.bus-vision.jp/ibako/view/approach.html?stopCdFrom={}&stopCdTo={}",
         stop_cd_from, stop_cd_to
     );
-    let response = reqwest::get(&url).await.unwrap();
+    let response = client.get(&url).send().await.unwrap();
 
     if response.status().is_success() {
         let body = response.text().await.unwrap();
@@ -71,14 +80,19 @@ async fn get_bus_info(stop_cd_from: &str, stop_cd_to: &str) {
 #[tokio::main]
 async fn main() {
     let args: Vec<String> = env::args().collect();
-    if args.len() != 2 {
-        println!("使用方法: cargo run <kosen|station>");
+    if args.len() < 2 || args.len() > 3 {
+        println!("使用方法: cargo run <kosen|station> [proxy_url]");
     } else {
         let (stop_cd_from, stop_cd_to) = if args[1] == "kosen" {
             ("69", "76")
         } else {
             ("76", "69")
         };
-        get_bus_info(stop_cd_from, stop_cd_to).await;
+        let proxy_url = if args.len() == 3 {
+            Some(args[2].as_str())
+        } else {
+            None
+        };
+        get_bus_info(stop_cd_from, stop_cd_to, proxy_url).await;
     }
 }
