@@ -12,23 +12,24 @@ Rust で書かれた茨城交通のバス情報取得プログラムです。
 
 1. プロジェクトをクローンします。
 
-   ```
+   ```bash
    git clone https://github.com/fukayatti0/busmap-nitic
    ```
 
 2. プロジェクトディレクトリに移動します。
 
-   ```
+   ```bash
    cd busmap-nitic
    ```
 
 3. 依存関係をインストールします。
 
-   ```
+   ```bash
    cargo build
    ```
 
 4. アプリケーションを実行します。引数として高専から乗るときは `kosen` 勝田駅から乗るときは `station` を指定します。プロキシは--proxy=で指定します。
-   ```
-   cargo run <kosen|station> --proxy=<プロキシURL>
+
+   ```bash
+   cargo run <kosen|station> --proxy=<プロキシURL:ポート>
    ```
