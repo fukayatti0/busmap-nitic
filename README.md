@@ -28,7 +28,7 @@ Rust で書かれた茨城交通のバス情報取得プログラムです。
    cargo build
    ```
 
-4. アプリケーションを実行します。引数として高専から乗るときは `kosen` 勝田駅から乗るときは `station` を指定します。
+4. アプリケーションを実行します。引数として高専から乗るときは `kosen` 勝田駅から乗るときは `station` を指定します。プロキシは--proxy=で指定します。
    ```
-   cargo run <kosen|station>
+   cargo run <kosen|station> --proxy=<プロキシURL>
    ```
