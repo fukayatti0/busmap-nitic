@@ -81,18 +81,27 @@ async fn get_bus_info(stop_cd_from: &str, stop_cd_to: &str, proxy_url: Option<&s
 async fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 || args.len() > 3 {
-        println!("使用方法: cargo run <kosen|station> [proxy_url]");
-    } else {
-        let (stop_cd_from, stop_cd_to) = if args[1] == "kosen" {
-            ("69", "76")
-        } else {
-            ("76", "69")
-        };
-        let proxy_url = if args.len() == 3 {
-            Some(args[2].as_str())
+        println!("使用方法: cargo run <kosen|station> [--proxy=<プロキシURL>]");
+        println!("\nオプション:");
+        println!(
+            "  --proxy=<プロキシURL>    プロキシサーバーを指定 (例: --proxy=http://localhost:8080)"
+        );
+        return;
+    }
+
+    let proxy_url = args.get(2).and_then(|arg| {
+        if arg.starts_with("--proxy=") {
+            Some(arg.trim_start_matches("--proxy="))
         } else {
             None
-        };
-        get_bus_info(stop_cd_from, stop_cd_to, proxy_url).await;
-    }
+        }
+    });
+
+    let (stop_cd_from, stop_cd_to) = if args[1] == "kosen" {
+        ("69", "76")
+    } else {
+        ("76", "69")
+    };
+
+    get_bus_info(stop_cd_from, stop_cd_to, proxy_url).await;
 }
