@@ -31,5 +31,5 @@ Rust で書かれた茨城交通のバス情報取得プログラムです。
 4. アプリケーションを実行します。引数として高専から乗るときは `kosen` 勝田駅から乗るときは `station` を指定します。プロキシは--proxy=で指定します。
 
    ```bash
-   cargo run <kosen|station> --proxy=<プロキシURL:ポート>
+   cargo run <kosen|station> --proxy=<プロキシURL:ポート番号>
    ```
